@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quotes</title>
+
+    <script src="jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="quotes.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/d36483f88d.js" crossorigin="anonymous"></script>
+</head>
+
+
+<body onload="startWorker()" class="flex-container">
+<link
+  rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+/>
+<div class="container-fluid">
+  <div class="flex-container">
+      <div id='quote-box'>
+          <div class="frame">
+              <div class="text">
+                  <p><i class="fas fa-quote-left"></i></p>
+                  <h1>
+              <p id="text"></p></h1>
+                  <p><i class="fas fa-quote-right"></i></p><br>
+              </div>
+              <div class="author">
+                  <p id="author"></p>
+                  <span>
+                      <i class="fa fa-pen-fancy fa-3x"></i>
+                  </span>
+              </div><br>
+
+
+          <div id="click">
+              <a href="twitter.com/intent/tweet" id="tweet-quote">
+                  <i class="fa fa-twitter"></i> </a>
+
+              <button id="new-quote">
+                  <strong>New quote</strong></button>
+          </div>
+          </div>
+
+      </div>
+      <div class="signed">
+      <h4>
+           by <a href="https://github.com/ovilogic" id="ovilogic">ovilogic</a></h4><br>
+
+      </div>
+
+
+
+  </div>
+</div>
+<script>
+
+       function startWorker() {
+
+            var w = new Worker("web_worker.js");
+            w.onmessage = function(event) {
+            var text = event.data[0]
+            var author = event.data[1]
+
+            document.getElementById("text").innerHTML = text;
+            document.getElementById("author").innerHTML = '- ' + author;
+
+            $('#tweet-quote').attr(
+                'href', 'https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' +
+              encodeURIComponent(
+              '"' + $("#text").text() + '" ' + $('#author').text()
+              )
+            );
+            }
+            }
+
+    function randColor() {
+        function shannon() {
+            return Math.floor(Math.random()*250);
+        }
+        var clr = 'rgb(' + shannon() + ',' + shannon() + ',' + shannon() + ')'
+        return clr
+    } 
+
+    $(document).ready(function() {
+        $('#new-quote').click(function(){
+            $('.flex-container').fadeOut(2000, function(){
+                var x = randColor()
+                $('.flex-container').css('background-color', x);
+                $('.flex-container').fadeIn(2000)
+                });
+
+            $('#quote-box').fadeOut(2000, function(){
+                startWorker();
+                })
+                .fadeIn(2000)
+        })
+    });
+
+</script>
+
+<script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
+
+</body>
+</html>
+
+
+
+
+
